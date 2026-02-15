@@ -1,12 +1,12 @@
-mkdir -p build/linux
-cd build/linux
+# Prep clean 
+rm -rf build
 
-cmake \
-  -G "FASTBuild" \
-  -S ../.. \
-  -B . \
-  -DCMAKE_BUILD_TYPE=Release \
-  -DGLFW_BUILD_DOCS=OFF \
-  -DGLFW_BUILD_TESTS=OFF \
-  -DGLFW_BUILD_EXAMPLES=OFF
+# --- DEBUG: static CRT ---
+cmake . -DCMAKE_MSVC_RUNTIME_LIBRARY="MultiThreadedDebug" -B "build/debug"
+cmake --build "build/debug" --config Debug
 
+# --- RELEASE: static CRT ---
+cmake . -DCMAKE_MSVC_RUNTIME_LIBRARY="MultiThreaded" -B "build/release"
+cmake --build "build/release" --config Release
+
+echo "Build complete!"

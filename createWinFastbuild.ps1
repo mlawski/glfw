@@ -1,17 +1,12 @@
-# Create build dir
-mkdir build\windows -Force
-cd build\windows
+# Prep clean 
+Remove-Item -Path "build" -Recurse
 
-# Configure with CMake using FASTBuild generator
-cmake `
-  -G "FASTBuild" `
-  -S ..\.. `
-  -B . `
-  -DCMAKE_BUILD_TYPE=Release `
-  -DGLFW_BUILD_DOCS=OFF `
-  -DGLFW_BUILD_TESTS=OFF `
-  -DGLFW_BUILD_EXAMPLES=OFF
+# --- DEBUG: static CRT ---
+cmake . -G "Visual Studio 17 2022" -A x64 -DCMAKE_MSVC_RUNTIME_LIBRARY="MultiThreadedDebug" -B "build/debug"
+cmake --build "build/debug" --config Debug
 
-# Build with FASTBuild (fbuild.exe must be in PATH)
-fbuild GLFW_LIB
+# --- RELEASE: static CRT ---
+cmake . -G "Visual Studio 17 2022" -A x64 -DCMAKE_MSVC_RUNTIME_LIBRARY="MultiThreaded" -B "build/release"
+cmake --build "build/release" --config Release
 
+Write-Host "Build complete!"
